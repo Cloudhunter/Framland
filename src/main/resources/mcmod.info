@@ -1,0 +1,16 @@
+[
+{
+  "modid": "framland",
+  "name": "Framland",
+  "description": "Farming Simulator",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Gaz492"],
+  "credits": "LatvianModder for helping with getting lightning strike locations",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
