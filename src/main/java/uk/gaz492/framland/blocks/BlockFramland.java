@@ -130,6 +130,13 @@ public class BlockFramland extends Block implements ITileEntityProvider {
     }
 
     @Override
+    public Item getItemDropped(IBlockState state, Random rand, int fortune)
+    {
+        super.getItemDropped(state, rand, fortune);
+        return Blocks.DIRT.getItemDropped(Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.DIRT), rand, fortune);
+    }
+
+    @Override
     public TileEntity createNewTileEntity(World world, int meta) {
         return new FramlandTileEntity();
     }
