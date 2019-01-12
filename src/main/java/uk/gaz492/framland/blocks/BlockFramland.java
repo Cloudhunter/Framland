@@ -4,13 +4,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockStem;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -20,6 +19,7 @@ import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import uk.gaz492.framland.ConfigHandler;
 import uk.gaz492.framland.Framland;
 import uk.gaz492.framland.ModBlocks;
 import uk.gaz492.framland.util.ModInformation;
@@ -39,8 +39,6 @@ public class BlockFramland extends Block {
         setHardness(0.6f);
         setTickRandomly(true);
         setHarvestLevel("shovel", 0);
-
-//        setDefaultState(blockState.getBaseState().withProperty(MOISTURE, 0));
     }
 
     @SideOnly(Side.CLIENT)
@@ -54,6 +52,12 @@ public class BlockFramland extends Block {
         IBlockState blockFramlandState = blockFramland.getDefaultState();
         world.setBlockState(pos, blockFramlandState);
         world.scheduleUpdate(pos.toImmutable(), blockFramland, 10);
+    }
+
+    public static void triggerTransformation(World world, BlockPos pos) {
+        world.spawnParticle(EnumParticleTypes.NOTE, (double) pos.getX() + 0.5D, (double) pos.getY() + 1.2D, (double) pos.getZ() + 0.5D, 24.0D, 0.0D, 0.0D);
+        world.playEvent(1033, pos, 0);
+        world.setBlockState(pos, ModBlocks.blockFramland.getDefaultState(), 3);
     }
 
     @SuppressWarnings("deprecation")
@@ -83,14 +87,30 @@ public class BlockFramland extends Block {
         Block blockUp = world.getBlockState(pos.up()).getBlock();
 
         if (blockUp instanceof BlockCrops || blockUp instanceof BlockStem) {
-            IBlockState blockPlant = world.getBlockState(pos.up());
-            blockPlant.getBlock().updateTick(world, pos.up(), blockPlant, rand);
-            if (blockPlant.getBlock().getMetaFromState(blockPlant) < 7) {
-                world.scheduleUpdate(pos, state.getBlock(), 20);
+            boolean isSameBlock = true;
+
+            while (isSameBlock) {
+                if (blockUp != null) {
+                    IBlockState blockPlant = world.getBlockState(pos.up());
+                    blockPlant.getBlock().updateTick(world, pos.up(), blockPlant, rand);
+
+                    if (blockPlant.getBlock().getClass() == blockUp.getClass()) {
+                        for (int growthAttempt = 0; growthAttempt < ConfigHandler.framlandGeneral.growthSpeedMultiplier; growthAttempt++) {
+                            blockPlant.getBlock().updateTick(world, pos.up(), world.getBlockState(pos.up()), rand);
+                        }
+                    } else {
+                        isSameBlock = false;
+                    }
+                } else {
+                    isSameBlock = false;
+                }
             }
+        }else if (blockUp instanceof IPlantable){
+            blockUp.updateTick(world, pos.up(), world.getBlockState(pos.up()), rand);
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
         super.neighborChanged(state, world, pos, blockIn, fromPos);

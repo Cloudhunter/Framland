@@ -4,6 +4,7 @@ import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -40,8 +41,7 @@ public class FramlandEventHandler {
                             IBlockState state = bolt.world.getBlockState(pos1);
 
                             if (state.getBlock() instanceof BlockFarmland) {
-                                bolt.world.setBlockState(pos1, ModBlocks.blockFramland.getDefaultState(), 3);
-                                bolt.world.playEvent(1033, pos1, 0);
+                                BlockFramland.triggerTransformation(bolt.world, pos1);
                             }
                         }
                     }
