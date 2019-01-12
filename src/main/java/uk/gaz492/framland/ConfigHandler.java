@@ -15,5 +15,11 @@ public class ConfigHandler {
                 "NOT IMPLEMENTED YET"
         })
         public boolean allowCraftingThunderHoe = false;
+
+        @Config.Comment({"Sets the minimum amount of ticks where crops can grow"})
+        public int minGrowthTicks = 20;
+
+        @Config.Comment({"Sets the maximum amount of ticks where crops can grow"})
+        public int maxGrowthTicks = 120;
     }
 }
