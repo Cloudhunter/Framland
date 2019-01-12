@@ -2,15 +2,12 @@ package uk.gaz492.framland.event;
 
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import uk.gaz492.framland.ModBlocks;
 import uk.gaz492.framland.blocks.BlockFramland;
 import uk.gaz492.framland.util.ModInformation;
 
@@ -49,14 +46,5 @@ public class FramlandEventHandler {
             }
             BOLTS.clear();
         }
-    }
-
-    @SubscribeEvent
-    public static void onBlockEvent(EntityEvent event) {
-//        Entity eventEnity = event.getEntity();
-//        if (eventEnity instanceof EntityLightningBolt) {
-//            System.out.println(eventEnity);
-//            System.out.println(String.format("Lightning Location X:%s Y:%s Z:%s", eventEnity.posX, eventEnity.posY, eventEnity.posZ));
-//        }
     }
 }

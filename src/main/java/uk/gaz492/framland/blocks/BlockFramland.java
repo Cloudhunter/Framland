@@ -21,18 +21,15 @@ import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import uk.gaz492.framland.ConfigHandler;
 import uk.gaz492.framland.Framland;
 import uk.gaz492.framland.ModBlocks;
 import uk.gaz492.framland.util.ModInformation;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Random;
 
 public class BlockFramland extends Block {
 
-    //    public static final PropertyInteger MOISTURE = PropertyInteger.create("moisture", 0, 7);
     public static final ResourceLocation FRAMLAND = new ResourceLocation(ModInformation.MOD_ID, "framland");
 
     public BlockFramland() {
@@ -48,14 +45,6 @@ public class BlockFramland extends Block {
     @SideOnly(Side.CLIENT)
     public void initModel() {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-    }
-
-    public static void startGrowth(World world, BlockPos pos) {
-        System.out.println("Growth Start");
-        BlockFramland blockFramland = ModBlocks.blockFramland;
-        IBlockState blockFramlandState = blockFramland.getDefaultState();
-        world.setBlockState(pos, blockFramlandState);
-        world.scheduleUpdate(pos.toImmutable(), blockFramland, 10);
     }
 
     public static void triggerTransformation(World world, BlockPos pos) {
@@ -90,8 +79,7 @@ public class BlockFramland extends Block {
                 IProperty<Integer> integerProperty = (IProperty<Integer>) property;
                 int age = blockState.getValue(integerProperty);
                 int maxAge = Collections.max(integerProperty.getAllowedValues());
-                System.out.println(String.format("Current Age: %s | Max Age: %s", age, maxAge));
-                return new int[] {age, maxAge};
+                return new int[]{age, maxAge};
             }
         }
         return null;
@@ -100,27 +88,21 @@ public class BlockFramland extends Block {
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
         super.updateTick(world, pos, state, rand);
-        System.out.println("Framland Update: " + pos);
 
         Block blockUp = world.getBlockState(pos.up()).getBlock();
 
         if (blockUp instanceof BlockCrops || blockUp instanceof BlockStem) {
-            System.out.println("Plant BlockCrop/Stem");
             IBlockState blockPlant = world.getBlockState(pos.up());
             int[] plantGrowthLevel = growthLevel(blockPlant);
-            if(plantGrowthLevel != null){
-                if(plantGrowthLevel[0] != plantGrowthLevel[1]){
-                    IGrowable iGrowable = (IGrowable)blockPlant.getBlock();
+            if (plantGrowthLevel != null) {
+                if (plantGrowthLevel[0] != plantGrowthLevel[1]) {
+                    world.playEvent(2005, pos.up(), 0);
+                    IGrowable iGrowable = (IGrowable) blockPlant.getBlock();
                     iGrowable.grow(world, rand, pos.up(), blockPlant);
+                    world.scheduleUpdate(pos, this.getDefaultState().getBlock(), 20);
                 }
             }
-//            if (!isFullyGrowthLevel(blockPlant)) {
-//                System.out.println("Plant is not fully grown growing");
-//                blockUp.updateTick(world, pos.up(), world.getBlockState(pos.up()), rand);
-//                world.scheduleUpdate(pos, this.getDefaultState().getBlock(), 20);
-//            }
         } else if (blockUp instanceof IPlantable) {
-            System.out.println("Plant is instance of IPLANTABLE");
             blockUp.updateTick(world, pos.up(), world.getBlockState(pos.up()), rand);
         }
     }
@@ -132,6 +114,8 @@ public class BlockFramland extends Block {
 
         if (world.getBlockState(pos.up()).getMaterial().isSolid()) {
             world.setBlockState(pos, Blocks.CLAY.getDefaultState(), 3);
+        } else if (world.getBlockState(pos.up()).getBlock() instanceof BlockCrops || world.getBlockState(pos.up()).getBlock() instanceof BlockStem) {
+            world.scheduleUpdate(pos, this.getDefaultState().getBlock(), 20);
         }
     }
 
@@ -148,16 +132,5 @@ public class BlockFramland extends Block {
             world.scheduleUpdate(pos, this.getDefaultState().getBlock(), 20);
         }
     }
-
-
-//    @Override
-//    public int getMetaFromState(IBlockState state) {
-//        return state.getValue(MOISTURE);
-//    }
-//
-//    @Override
-//    protected BlockStateContainer createBlockState() {
-//        return new BlockStateContainer(this, MOISTURE);
-//    }
 
 }

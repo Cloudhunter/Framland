@@ -15,11 +15,5 @@ public class ConfigHandler {
                 "NOT IMPLEMENTED YET"
         })
         public boolean allowCraftingThunderHoe = false;
-
-        @Config.RequiresMcRestart
-        @Config.Comment({
-                "Growth speed multiplier"
-        })
-        public int growthSpeedMultiplier = 2;
     }
 }
