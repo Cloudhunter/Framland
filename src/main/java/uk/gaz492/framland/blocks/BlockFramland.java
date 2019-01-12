@@ -3,7 +3,9 @@ package uk.gaz492.framland.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockStem;
+import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
@@ -24,6 +26,8 @@ import uk.gaz492.framland.Framland;
 import uk.gaz492.framland.ModBlocks;
 import uk.gaz492.framland.util.ModInformation;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Random;
 
 public class BlockFramland extends Block {
@@ -79,6 +83,20 @@ public class BlockFramland extends Block {
         return plantType == EnumPlantType.Crop;
     }
 
+    private int[] growthLevel(IBlockState blockState) {
+        for (IProperty<?> property : blockState.getProperties().keySet()) {
+            if (!"age".equals(property.getName())) continue;
+            if (property.getValueClass() == Integer.class) {
+                IProperty<Integer> integerProperty = (IProperty<Integer>) property;
+                int age = blockState.getValue(integerProperty);
+                int maxAge = Collections.max(integerProperty.getAllowedValues());
+                System.out.println(String.format("Current Age: %s | Max Age: %s", age, maxAge));
+                return new int[] {age, maxAge};
+            }
+        }
+        return null;
+    }
+
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
         super.updateTick(world, pos, state, rand);
@@ -87,25 +105,22 @@ public class BlockFramland extends Block {
         Block blockUp = world.getBlockState(pos.up()).getBlock();
 
         if (blockUp instanceof BlockCrops || blockUp instanceof BlockStem) {
-            boolean isSameBlock = true;
-
-            while (isSameBlock) {
-                if (blockUp != null) {
-                    IBlockState blockPlant = world.getBlockState(pos.up());
-                    blockPlant.getBlock().updateTick(world, pos.up(), blockPlant, rand);
-
-                    if (blockPlant.getBlock().getClass() == blockUp.getClass()) {
-                        for (int growthAttempt = 0; growthAttempt < ConfigHandler.framlandGeneral.growthSpeedMultiplier; growthAttempt++) {
-                            blockPlant.getBlock().updateTick(world, pos.up(), world.getBlockState(pos.up()), rand);
-                        }
-                    } else {
-                        isSameBlock = false;
-                    }
-                } else {
-                    isSameBlock = false;
+            System.out.println("Plant BlockCrop/Stem");
+            IBlockState blockPlant = world.getBlockState(pos.up());
+            int[] plantGrowthLevel = growthLevel(blockPlant);
+            if(plantGrowthLevel != null){
+                if(plantGrowthLevel[0] != plantGrowthLevel[1]){
+                    IGrowable iGrowable = (IGrowable)blockPlant.getBlock();
+                    iGrowable.grow(world, rand, pos.up(), blockPlant);
                 }
             }
-        }else if (blockUp instanceof IPlantable){
+//            if (!isFullyGrowthLevel(blockPlant)) {
+//                System.out.println("Plant is not fully grown growing");
+//                blockUp.updateTick(world, pos.up(), world.getBlockState(pos.up()), rand);
+//                world.scheduleUpdate(pos, this.getDefaultState().getBlock(), 20);
+//            }
+        } else if (blockUp instanceof IPlantable) {
+            System.out.println("Plant is instance of IPLANTABLE");
             blockUp.updateTick(world, pos.up(), world.getBlockState(pos.up()), rand);
         }
     }
