@@ -21,11 +21,11 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Random;
 
-public class FramlandTileEntity extends TileEntity implements ITickable {
+public class DritTileEntity extends TileEntity implements ITickable {
 
     private int tickCount = 0;
 
-    public EnergyStorage energy = new EnergyStorage(1000000, 1000000, 1000000);
+    public EnergyStorage energy = new EnergyStorage(50000, 50000, 50000);
 
     @Override
     public NBTTagCompound serializeNBT() {
@@ -69,21 +69,21 @@ public class FramlandTileEntity extends TileEntity implements ITickable {
         if (!world.isRemote) {
             Block blockUp = world.getBlockState(pos.up()).getBlock();
             if (blockUp instanceof BlockCrops || blockUp instanceof BlockStem) {
-                int growthTick = new Random().nextInt((ConfigHandler.framlandConfig.maxGrowthTicks - ConfigHandler.framlandConfig.minGrowthTicks) + 1) + ConfigHandler.framlandConfig.minGrowthTicks;
+                int growthTick = new Random().nextInt((ConfigHandler.dritConfig.maxGrowthTicks - ConfigHandler.dritConfig.minGrowthTicks) + 1) + ConfigHandler.dritConfig.minGrowthTicks;
                 if (tickCount >= growthTick) {
-                    if (energy.getEnergyStored() >= ConfigHandler.framlandConfig.rfToGrow) {
-                            IBlockState blockPlant = world.getBlockState(pos.up(1));
-                            int[] plantGrowthLevel = growthLevel(blockPlant);
-                            if (plantGrowthLevel != null) {
-                                if (plantGrowthLevel[0] != plantGrowthLevel[1]) {
-                                    tickCount = 0;
-                                    energy.extractEnergy(ConfigHandler.framlandConfig.rfToGrow, false);
-                                    world.playEvent(2005, pos.up(1), 0);
-                                    IGrowable iGrowable = (IGrowable) blockPlant.getBlock();
-                                    iGrowable.grow(world, new Random(), pos.up(), blockPlant);
-                                    world.markBlockRangeForRenderUpdate(pos, pos);
-                                }
+                    if (energy.getEnergyStored() >= ConfigHandler.dritConfig.rfToGrow) {
+                        IBlockState blockPlant = world.getBlockState(pos.up(1));
+                        int[] plantGrowthLevel = growthLevel(blockPlant);
+                        if (plantGrowthLevel != null) {
+                            if (plantGrowthLevel[0] != plantGrowthLevel[1]) {
+                                tickCount = 0;
+                                energy.extractEnergy(ConfigHandler.dritConfig.rfToGrow, false);
+                                world.playEvent(2005, pos.up(1), 0);
+                                IGrowable iGrowable = (IGrowable) blockPlant.getBlock();
+                                iGrowable.grow(world, new Random(), pos.up(), blockPlant);
+                                world.markBlockRangeForRenderUpdate(pos, pos);
                             }
+                        }
                     }
                 }
                 tickCount++;

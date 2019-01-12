@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import uk.gaz492.framland.Framland;
@@ -24,14 +25,14 @@ import uk.gaz492.framland.util.ModInformation;
 import java.util.Collections;
 import java.util.Random;
 
-public class BlockFramland extends Block implements ITileEntityProvider {
+public class BlockDrit extends Block implements ITileEntityProvider {
 
-    public static final ResourceLocation FRAMLAND = new ResourceLocation(ModInformation.MOD_ID, "framland");
+    public static final ResourceLocation DRIT = new ResourceLocation(ModInformation.MOD_ID, "drit");
 
-    public BlockFramland() {
+    public BlockDrit() {
         super(Material.GROUND);
-        setRegistryName(FRAMLAND);
-        setUnlocalizedName(ModInformation.MOD_ID + ".framland");
+        setRegistryName(DRIT);
+        setUnlocalizedName(ModInformation.MOD_ID + ".drit");
         setSoundType(SoundType.GROUND);
         setCreativeTab(Framland.creativeTab);
         setHardness(0.6f);
@@ -62,26 +63,6 @@ public class BlockFramland extends Block implements ITileEntityProvider {
         return plantType == EnumPlantType.Crop;
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        super.neighborChanged(state, world, pos, blockIn, fromPos);
-
-        if (world.getBlockState(pos.up(1)).getMaterial().isSolid()) {
-            world.setBlockState(pos, Blocks.CLAY.getDefaultState(), 3);
-        }
-    }
-
-    @Override
-    public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
-        super.onBlockAdded(world, pos, state);
-
-        IBlockState blockUpState = world.getBlockState(pos.up());
-        if (blockUpState.getMaterial().isSolid()) {
-            world.setBlockState(pos, Blocks.CLAY.getDefaultState(), 3);
-        }
-    }
-
     @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
@@ -91,7 +72,7 @@ public class BlockFramland extends Block implements ITileEntityProvider {
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
-        return new FramlandTileEntity();
+        return new DritTileEntity();
     }
 
 }

@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import uk.gaz492.framland.ModBlocks;
+import uk.gaz492.framland.blocks.BlockDrit;
 import uk.gaz492.framland.blocks.BlockFramland;
 import uk.gaz492.framland.util.ModInformation;
 
@@ -42,7 +43,7 @@ public class FramlandEventHandler {
                             BlockPos pos1 = pos.add(x, y, z);
                             IBlockState state = bolt.world.getBlockState(pos1);
 
-                            if (state.getBlock() instanceof BlockFarmland) {
+                            if (state.getBlock() instanceof BlockDrit) {
 //                                bolt.world.spawnParticle(EnumParticleTypes.NOTE, pos1.getX() + 1.0D, pos1.getY() + 1.5D, pos1.getZ() + 1.0D, 24.0D, 0.0D, 0.0D);
 //                                bolt.world.playEvent(1033, pos1.up(1), 0);
                                 bolt.world.setBlockState(pos, ModBlocks.blockFramland.getDefaultState(), 3);

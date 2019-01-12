@@ -7,7 +7,7 @@
     }
   },
   "variants": {
-    "normal": { "model": "farmland_moist" },
-    "inventory": { "model": "farmland_moist" }
+    "normal": { "model": "farmland_dry" },
+    "inventory": { "model": "farmland_dry" }
   }
 }

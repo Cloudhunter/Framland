@@ -19,6 +19,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import uk.gaz492.framland.Framland;
+import uk.gaz492.framland.ModBlocks;
 import uk.gaz492.framland.util.ModInformation;
 
 import static net.minecraftforge.event.ForgeEventFactory.onHoeUse;
@@ -52,7 +53,7 @@ public class ItemThunderHoe extends Item {
             Block block = iblockstate.getBlock();
 
             if (facing != EnumFacing.DOWN && world.isAirBlock(pos.up())) {
-                if (block == Blocks.FARMLAND) {
+                if (block == ModBlocks.blockDrit) {
                     world.spawnEntity(new EntityLightningBolt(world, pos.getX(), pos.getY(), pos.getZ(), false));
                 }
 

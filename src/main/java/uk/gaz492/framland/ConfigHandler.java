@@ -6,15 +6,27 @@ import uk.gaz492.framland.util.ModInformation;
 @Config(modid = ModInformation.MOD_ID)
 public class ConfigHandler {
 
-    public static SubCategory framlandGeneral = new SubCategory();
+    @Config.Comment({"Settings for the Drit block"})
+    public static DritCategory dritConfig = new DritCategory();
+    @Config.Comment({"Settings for the Framland block"})
+    public static FramlandCategory framlandConfig = new FramlandCategory();
 
-    public static class SubCategory {
-        @Config.RequiresMcRestart
-        @Config.Comment({
-                "Enabled/Disables crafting the thunder hoe",
-                "NOT IMPLEMENTED YET"
-        })
-        public boolean allowCraftingThunderHoe = false;
+    public static class DritCategory {
+
+        @Config.Comment({"RF needed pertick to grow crops"})
+        public int rfToGrow = 1000;
+
+        @Config.Comment({"Sets the minimum amount of ticks where crops can grow"})
+        public int minGrowthTicks = 400;
+
+        @Config.Comment({"Sets the maximum amount of ticks where crops can grow"})
+        public int maxGrowthTicks = 600;
+    }
+
+    public static class FramlandCategory {
+
+        @Config.Comment({"RF needed pertick to grow crops"})
+        public int rfToGrow = 100000;
 
         @Config.Comment({"Sets the minimum amount of ticks where crops can grow"})
         public int minGrowthTicks = 20;
