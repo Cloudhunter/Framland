@@ -1,22 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " B ",
-    " D ",
-    " D "
-  ],
-  "key": {
-    "D": [
-      {
-        "item": "minecraft:dirt",
-        "data": 0
-      }
-    ],
-    "B": {
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:dirt",
+      "data": 0
+    },
+    {
+      "item": "minecraft:dirt",
+      "data": 0
+    },
+    {
       "item": "minecraft:dye",
       "data": 15
     }
-  },
+  ],
   "result": {
     "item": "framland:drit",
     "count": 1
