@@ -23,7 +23,4 @@ public class FramlandTileEntity extends TileEntity implements ITickable {
             tickCount++;
         }
     }
-
-    private void updateCounter() {
-    }
 }
