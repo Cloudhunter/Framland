@@ -7,8 +7,8 @@
     }
   },
   "variants": {
-    "normal": [{}],
-    "inventory": [{}],
+    "normal": { "model": "farmland_dry" },
+    "inventory": { "model": "farmland_dry" },
     "moisture=0": { "model": "farmland_dry" },
     "moisture=1": { "model": "farmland_dry" },
     "moisture=2": { "model": "farmland_dry" },

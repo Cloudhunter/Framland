@@ -1,11 +1,14 @@
 package uk.gaz492.framland.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockCrops;
+import net.minecraft.block.BlockStem;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -25,7 +28,7 @@ import java.util.Random;
 
 public class BlockFramland extends Block {
 
-    public static final PropertyInteger MOISTURE = PropertyInteger.create("moisture", 0, 7);
+    //    public static final PropertyInteger MOISTURE = PropertyInteger.create("moisture", 0, 7);
     public static final ResourceLocation FRAMLAND = new ResourceLocation(ModInformation.MOD_ID, "framland");
 
     public BlockFramland() {
@@ -37,7 +40,7 @@ public class BlockFramland extends Block {
         setTickRandomly(true);
         setHarvestLevel("shovel", 0);
 
-        setDefaultState(blockState.getBaseState().withProperty(MOISTURE, 0));
+//        setDefaultState(blockState.getBaseState().withProperty(MOISTURE, 0));
     }
 
     @SideOnly(Side.CLIENT)
@@ -75,18 +78,51 @@ public class BlockFramland extends Block {
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
         super.updateTick(world, pos, state, rand);
+        System.out.println("Framland Update: " + pos);
 
-        System.out.println("Framland Update");
+        Block blockUp = world.getBlockState(pos.up()).getBlock();
+
+        if (blockUp instanceof BlockCrops || blockUp instanceof BlockStem) {
+            IBlockState blockPlant = world.getBlockState(pos.up());
+            blockPlant.getBlock().updateTick(world, pos.up(), blockPlant, rand);
+            if (blockPlant.getBlock().getMetaFromState(blockPlant) < 7) {
+                world.scheduleUpdate(pos, state.getBlock(), 20);
+            }
+        }
     }
 
     @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(MOISTURE);
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        super.neighborChanged(state, world, pos, blockIn, fromPos);
+
+        if (world.getBlockState(pos.up()).getMaterial().isSolid()) {
+            world.setBlockState(pos, Blocks.CLAY.getDefaultState(), 3);
+        }
     }
 
     @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, MOISTURE);
+    public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
+        super.onBlockAdded(world, pos, state);
+
+        IBlockState blockUpState = world.getBlockState(pos.up());
+        System.out.println(blockUpState.getBlock());
+        if (blockUpState.getMaterial().isSolid()) {
+
+            world.setBlockState(pos, Blocks.CLAY.getDefaultState(), 3);
+        } else if (blockUpState.getBlock() instanceof BlockCrops || blockUpState.getBlock() instanceof BlockStem) {
+            world.scheduleUpdate(pos, this.getDefaultState().getBlock(), 20);
+        }
     }
+
+
+//    @Override
+//    public int getMetaFromState(IBlockState state) {
+//        return state.getValue(MOISTURE);
+//    }
+//
+//    @Override
+//    protected BlockStateContainer createBlockState() {
+//        return new BlockStateContainer(this, MOISTURE);
+//    }
 
 }

@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import uk.gaz492.framland.ModBlocks;
 import uk.gaz492.framland.blocks.BlockFramland;
+import uk.gaz492.framland.item.ItemThunderHoe;
 
 @Mod.EventBusSubscriber
 public class CommonProxy {
@@ -35,5 +36,6 @@ public class CommonProxy {
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().register(new ItemBlock(ModBlocks.blockFramland).setRegistryName(BlockFramland.FRAMLAND));
+        event.getRegistry().register(new ItemThunderHoe());
     }
 }

@@ -41,7 +41,7 @@ public class FramlandEventHandler {
 
                             if (state.getBlock() instanceof BlockFarmland) {
                                 bolt.world.setBlockState(pos1, ModBlocks.blockFramland.getDefaultState(), 3);
-                                BlockFramland.startGrowth(bolt.world, pos1);
+                                bolt.world.playEvent(1033, pos1, 0);
                             }
                         }
                     }
@@ -53,10 +53,10 @@ public class FramlandEventHandler {
 
     @SubscribeEvent
     public static void onBlockEvent(EntityEvent event) {
-        Entity eventEnity = event.getEntity();
-        if (eventEnity instanceof EntityLightningBolt) {
-            System.out.println(eventEnity);
-            System.out.println(String.format("Lightning Location X:%s Y:%s Z:%s", eventEnity.posX, eventEnity.posY, eventEnity.posZ));
-        }
+//        Entity eventEnity = event.getEntity();
+//        if (eventEnity instanceof EntityLightningBolt) {
+//            System.out.println(eventEnity);
+//            System.out.println(String.format("Lightning Location X:%s Y:%s Z:%s", eventEnity.posX, eventEnity.posY, eventEnity.posZ));
+//        }
     }
 }
