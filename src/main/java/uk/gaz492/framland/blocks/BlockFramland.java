@@ -1,15 +1,13 @@
 package uk.gaz492.framland.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockCrops;
-import net.minecraft.block.BlockStem;
-import net.minecraft.block.IGrowable;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
@@ -28,7 +26,7 @@ import uk.gaz492.framland.util.ModInformation;
 import java.util.Collections;
 import java.util.Random;
 
-public class BlockFramland extends Block {
+public class BlockFramland extends Block implements ITileEntityProvider {
 
     public static final ResourceLocation FRAMLAND = new ResourceLocation(ModInformation.MOD_ID, "framland");
 
@@ -36,9 +34,9 @@ public class BlockFramland extends Block {
         super(Material.GROUND);
         setRegistryName(FRAMLAND);
         setUnlocalizedName(ModInformation.MOD_ID + ".framland");
+        setSoundType(SoundType.GROUND);
         setCreativeTab(Framland.creativeTab);
         setHardness(0.6f);
-        setTickRandomly(true);
         setHarvestLevel("shovel", 0);
     }
 
@@ -48,9 +46,7 @@ public class BlockFramland extends Block {
     }
 
     public static void triggerTransformation(World world, BlockPos pos) {
-        world.spawnParticle(EnumParticleTypes.NOTE, (double) pos.getX() + 0.5D, (double) pos.getY() + 1.2D, (double) pos.getZ() + 0.5D, 24.0D, 0.0D, 0.0D);
-        world.playEvent(1033, pos, 0);
-        world.setBlockState(pos, ModBlocks.blockFramland.getDefaultState(), 3);
+
     }
 
     @SuppressWarnings("deprecation")
@@ -89,22 +85,24 @@ public class BlockFramland extends Block {
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
         super.updateTick(world, pos, state, rand);
 
-        Block blockUp = world.getBlockState(pos.up()).getBlock();
+        if (!world.isRemote) {
+            Block blockUp = world.getBlockState(pos.up()).getBlock();
 
-        if (blockUp instanceof BlockCrops || blockUp instanceof BlockStem) {
-            IBlockState blockPlant = world.getBlockState(pos.up());
-            int[] plantGrowthLevel = growthLevel(blockPlant);
-            if (plantGrowthLevel != null) {
-                if (plantGrowthLevel[0] != plantGrowthLevel[1]) {
-                    world.playEvent(2005, pos.up(), 0);
-                    IGrowable iGrowable = (IGrowable) blockPlant.getBlock();
-                    iGrowable.grow(world, rand, pos.up(), blockPlant);
-                    world.scheduleUpdate(pos, this.getDefaultState().getBlock(), 20);
+            if (blockUp instanceof BlockCrops || blockUp instanceof BlockStem) {
+                IBlockState blockPlant = world.getBlockState(pos.up(1));
+                int[] plantGrowthLevel = growthLevel(blockPlant);
+                if (plantGrowthLevel != null) {
+                    if (plantGrowthLevel[0] != plantGrowthLevel[1]) {
+                        world.playEvent(2005, pos.up(1), 0);
+                        IGrowable iGrowable = (IGrowable) blockPlant.getBlock();
+                        iGrowable.grow(world, rand, pos.up(), blockPlant);
+                    }
                 }
+            } else if (blockUp instanceof IPlantable) {
+                blockUp.updateTick(world, pos.up(), world.getBlockState(pos.up(1)), rand);
             }
-        } else if (blockUp instanceof IPlantable) {
-            blockUp.updateTick(world, pos.up(), world.getBlockState(pos.up()), rand);
         }
+
     }
 
     @SuppressWarnings("deprecation")
@@ -112,11 +110,11 @@ public class BlockFramland extends Block {
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
         super.neighborChanged(state, world, pos, blockIn, fromPos);
 
-        if (world.getBlockState(pos.up()).getMaterial().isSolid()) {
+        if (world.getBlockState(pos.up(1)).getMaterial().isSolid()) {
             world.setBlockState(pos, Blocks.CLAY.getDefaultState(), 3);
-        } else if (world.getBlockState(pos.up()).getBlock() instanceof BlockCrops || world.getBlockState(pos.up()).getBlock() instanceof BlockStem) {
-            world.scheduleUpdate(pos, this.getDefaultState().getBlock(), 20);
-        }
+        } //else if (world.getBlockState(pos.up()).getBlock() instanceof BlockCrops || world.getBlockState(pos.up()).getBlock() instanceof BlockStem) {
+//            world.scheduleUpdate(pos, this.getDefaultState().getBlock(), 20);
+//        }
     }
 
     @Override
@@ -124,13 +122,16 @@ public class BlockFramland extends Block {
         super.onBlockAdded(world, pos, state);
 
         IBlockState blockUpState = world.getBlockState(pos.up());
-        System.out.println(blockUpState.getBlock());
         if (blockUpState.getMaterial().isSolid()) {
-
             world.setBlockState(pos, Blocks.CLAY.getDefaultState(), 3);
-        } else if (blockUpState.getBlock() instanceof BlockCrops || blockUpState.getBlock() instanceof BlockStem) {
-            world.scheduleUpdate(pos, this.getDefaultState().getBlock(), 20);
-        }
+        } //else if (blockUpState.getBlock() instanceof BlockCrops || blockUpState.getBlock() instanceof BlockStem) {
+//            world.scheduleUpdate(pos, this.getDefaultState().getBlock(), 20);
+//        }
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World world, int meta) {
+        return new FramlandTileEntity();
     }
 
 }

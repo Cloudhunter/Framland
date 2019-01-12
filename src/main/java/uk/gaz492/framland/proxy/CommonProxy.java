@@ -3,15 +3,19 @@ package uk.gaz492.framland.proxy;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraftforge.event.GameRuleChangeEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import uk.gaz492.framland.ModBlocks;
 import uk.gaz492.framland.blocks.BlockFramland;
+import uk.gaz492.framland.blocks.FramlandTileEntity;
 import uk.gaz492.framland.item.ItemThunderHoe;
+import uk.gaz492.framland.util.ModInformation;
 
 @Mod.EventBusSubscriber
 public class CommonProxy {
@@ -28,9 +32,12 @@ public class CommonProxy {
 
     }
 
+    @SuppressWarnings("deprecation")
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().register(new BlockFramland());
+
+        GameRegistry.registerTileEntity(FramlandTileEntity.class, ModInformation.MOD_ID + "_framland");
     }
 
     @SubscribeEvent

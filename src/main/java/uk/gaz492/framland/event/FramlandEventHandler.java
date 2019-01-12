@@ -3,11 +3,13 @@ package uk.gaz492.framland.event;
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import uk.gaz492.framland.ModBlocks;
 import uk.gaz492.framland.blocks.BlockFramland;
 import uk.gaz492.framland.util.ModInformation;
 
@@ -38,7 +40,9 @@ public class FramlandEventHandler {
                             IBlockState state = bolt.world.getBlockState(pos1);
 
                             if (state.getBlock() instanceof BlockFarmland) {
-                                BlockFramland.triggerTransformation(bolt.world, pos1);
+                                bolt.world.spawnParticle(EnumParticleTypes.NOTE, pos1.getX() + 0.5D, pos1.getY() + 1.5D, pos1.getZ() + 0.5D, 24.0D, 0.0D, 0.0D);
+                                bolt.world.playEvent(1033, pos1.up(1), 0);
+                                bolt.world.setBlockState(pos, ModBlocks.blockFramland.getDefaultState(), 3);
                             }
                         }
                     }
