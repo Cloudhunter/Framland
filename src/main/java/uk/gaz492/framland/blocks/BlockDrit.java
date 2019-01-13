@@ -66,6 +66,16 @@ public class BlockDrit extends Block implements ITileEntityProvider {
         return Blocks.DIRT.getItemDropped(Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.DIRT), rand, fortune);
     }
 
+    @SuppressWarnings("deprecation")
+    @Override
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        super.neighborChanged(state, world, pos, blockIn, fromPos);
+
+        if (world.getBlockState(pos.up(1)).getMaterial().isSolid()) {
+            world.setBlockState(pos, Blocks.DIRT.getDefaultState(), 3);
+        }
+    }
+
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
         return new DritTileEntity();

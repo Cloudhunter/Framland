@@ -71,16 +71,6 @@ public class BlockFramland extends Block implements ITileEntityProvider {
     }
 
     @Override
-    public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
-        super.onBlockAdded(world, pos, state);
-
-        IBlockState blockUpState = world.getBlockState(pos.up());
-        if (blockUpState.getMaterial().isSolid()) {
-            world.setBlockState(pos, Blocks.CLAY.getDefaultState(), 3);
-        }
-    }
-
-    @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune) {
         super.getItemDropped(state, rand, fortune);
         return Blocks.DIRT.getItemDropped(Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.DIRT), rand, fortune);
