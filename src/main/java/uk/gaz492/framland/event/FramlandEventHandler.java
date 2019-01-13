@@ -37,13 +37,13 @@ public class FramlandEventHandler {
                 for (int z = -2; z <= 2; z++) {
                     for (int x = -2; x <= 2; x++) {
                         for (int y = -1; y <= 1; y++) {
-                            BlockPos pos1 = pos.add(x, y, z);
-                            IBlockState state = bolt.world.getBlockState(pos1);
+                            BlockPos struckBlock = pos.add(x, y, z);
+                            IBlockState state = bolt.world.getBlockState(struckBlock);
 
                             if (state.getBlock() instanceof BlockDrit) {
 //                                bolt.world.spawnParticle(EnumParticleTypes.NOTE, pos1.getX() + 1.0D, pos1.getY() + 1.5D, pos1.getZ() + 1.0D, 24.0D, 0.0D, 0.0D);
 //                                bolt.world.playEvent(1033, pos1.up(1), 0);
-                                bolt.world.setBlockState(pos, ModBlocks.blockFramland.getDefaultState(), 3);
+                                bolt.world.setBlockState(struckBlock, ModBlocks.blockFramland.getDefaultState(), 3);
                             }
                         }
                     }
