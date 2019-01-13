@@ -13,7 +13,10 @@ public class ConfigHandler {
 
     public static class DritCategory {
 
-        @Config.Comment({"RF needed pertick to grow crops"})
+        @Config.Comment({"Maximum RF the drit block can hold"})
+        public int maxRF = 50000;
+
+        @Config.Comment({"RF needed per tick to grow crops"})
         public int rfToGrow = 1000;
 
         @Config.Comment({"Sets the minimum amount of ticks where crops can grow"})
@@ -24,6 +27,9 @@ public class ConfigHandler {
     }
 
     public static class FramlandCategory {
+
+        @Config.Comment({"Maximum RF the drit block can hold"})
+        public int maxRF = 1000000;
 
         @Config.Comment({"RF needed pertick to grow crops"})
         public int rfToGrow = 100000;

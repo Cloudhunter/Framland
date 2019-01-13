@@ -1,31 +1,24 @@
 package uk.gaz492.framland.blocks;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockCrops;
-import net.minecraft.block.BlockStem;
 import net.minecraft.block.IGrowable;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import uk.gaz492.framland.ConfigHandler;
-import uk.gaz492.framland.ModBlocks;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.Random;
 
 public class FramlandTileEntity extends TileEntity implements ITickable {
 
     private int tickCount = 0;
 
-    public EnergyStorage energy = new EnergyStorage(1000000, 1000000, 1000000);
+    public EnergyStorage energy = new EnergyStorage(ConfigHandler.framlandConfig.maxRF, ConfigHandler.framlandConfig.maxRF, ConfigHandler.framlandConfig.maxRF);
 
     @Override
     public NBTTagCompound serializeNBT() {
@@ -51,46 +44,27 @@ public class FramlandTileEntity extends TileEntity implements ITickable {
         return capability == CapabilityEnergy.ENERGY ? (T) energy : super.getCapability(capability, facing);
     }
 
-    private int[] growthLevel(IBlockState blockState) {
-        for (IProperty<?> property : blockState.getProperties().keySet()) {
-            if (!"age".equals(property.getName())) continue;
-            if (property.getValueClass() == Integer.class) {
-                IProperty<Integer> integerProperty = (IProperty<Integer>) property;
-                int age = blockState.getValue(integerProperty);
-                int maxAge = Collections.max(integerProperty.getAllowedValues());
-                return new int[]{age, maxAge};
-            }
-        }
-        return null;
-    }
-
     @Override
     public void update() {
         if (!world.isRemote) {
             Block blockUp = world.getBlockState(pos.up()).getBlock();
-            if (blockUp instanceof BlockCrops || blockUp instanceof BlockStem) {
-                int growthTick = new Random().nextInt((ConfigHandler.framlandConfig.maxGrowthTicks - ConfigHandler.framlandConfig.minGrowthTicks) + 1) + ConfigHandler.framlandConfig.minGrowthTicks;
+            if (blockUp instanceof IGrowable) {
+                int growthTick = world.rand.nextInt((ConfigHandler.framlandConfig.maxGrowthTicks - ConfigHandler.framlandConfig.minGrowthTicks) + 1) + ConfigHandler.framlandConfig.minGrowthTicks;
                 if (tickCount >= growthTick) {
                     if (energy.getEnergyStored() >= ConfigHandler.framlandConfig.rfToGrow) {
-                            IBlockState blockPlant = world.getBlockState(pos.up(1));
-                            int[] plantGrowthLevel = growthLevel(blockPlant);
-                            if (plantGrowthLevel != null) {
-                                if (plantGrowthLevel[0] != plantGrowthLevel[1]) {
-                                    tickCount = 0;
-                                    energy.extractEnergy(ConfigHandler.framlandConfig.rfToGrow, false);
-                                    world.playEvent(2005, pos.up(1), 0);
-                                    IGrowable iGrowable = (IGrowable) blockPlant.getBlock();
-                                    iGrowable.grow(world, new Random(), pos.up(), blockPlant);
-                                    world.markBlockRangeForRenderUpdate(pos, pos);
-                                }
-                            }
+                        IBlockState blockPlant = world.getBlockState(pos.up(1));
+                        IGrowable iGrowable = (IGrowable) blockPlant.getBlock();
+                        if (iGrowable.canGrow(world, pos.up(1), blockPlant, false)) {
+                            tickCount = 0;
+                            energy.extractEnergy(ConfigHandler.framlandConfig.rfToGrow, false);
+                            world.playEvent(2005, pos.up(1), 0);
+                            iGrowable.grow(world, world.rand, pos.up(), blockPlant);
+                            world.markBlockRangeForRenderUpdate(pos, pos);
+                        }
                     }
                 }
                 tickCount++;
-            } else if (blockUp instanceof IPlantable) {
-                blockUp.updateTick(world, pos.up(), world.getBlockState(pos.up(1)), new Random());
             }
-
         }
     }
 }
