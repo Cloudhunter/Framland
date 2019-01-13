@@ -33,6 +33,7 @@ public class BlockFramland extends Block implements ITileEntityProvider {
         setSoundType(SoundType.GROUND);
         setCreativeTab(Framland.creativeTab);
         setHardness(0.6f);
+        setLightLevel(0.6f);
         setHarvestLevel("shovel", 0);
     }
 
