@@ -1,9 +1,7 @@
 package uk.gaz492.framland.event;
 
-import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -14,7 +12,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import uk.gaz492.framland.ModBlocks;
 import uk.gaz492.framland.blocks.BlockDrit;
-import uk.gaz492.framland.blocks.BlockFramland;
 import uk.gaz492.framland.util.ModInformation;
 
 import java.util.ArrayList;

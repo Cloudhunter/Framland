@@ -3,7 +3,6 @@ package uk.gaz492.framland.proxy;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraftforge.event.GameRuleChangeEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -23,7 +22,6 @@ import uk.gaz492.framland.util.ModInformation;
 public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent event) {
-
     }
 
     public void init(FMLInitializationEvent event) {
