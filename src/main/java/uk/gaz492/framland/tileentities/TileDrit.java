@@ -68,23 +68,25 @@ public class TileDrit extends TileEntity implements ITickable {
     @Override
     public void update() {
         if (!world.isRemote) {
-            Block blockUp = world.getBlockState(pos.up()).getBlock();
-            if (blockUp instanceof IGrowable) {
-                int growthTick = world.rand.nextInt((ConfigHandler.dritConfig.maxGrowthTicks - ConfigHandler.dritConfig.minGrowthTicks) + 1) + ConfigHandler.dritConfig.minGrowthTicks;
-                if (tickCount >= growthTick) {
-                    if (energy.getEnergyStored() >= ConfigHandler.dritConfig.rfToGrow) {
-                        IBlockState blockPlant = world.getBlockState(pos.up(1));
-                        IGrowable iGrowable = (IGrowable) blockPlant.getBlock();
-                        if (iGrowable.canGrow(world, pos.up(1), blockPlant, false)) {
-                            tickCount = 0;
-                            energy.extractEnergy(ConfigHandler.dritConfig.rfToGrow, false);
-                            world.playEvent(2005, pos.up(1), 0);
-                            iGrowable.grow(world, world.rand, pos.up(), blockPlant);
-                            world.markBlockRangeForRenderUpdate(pos, pos);
-                        }
-                    }
-                }
-                tickCount++;
+            int growthTickRand = world.rand.nextInt((ConfigHandler.dritConfig.maxGrowthTicks - ConfigHandler.dritConfig.minGrowthTicks) + 1) + ConfigHandler.dritConfig.minGrowthTicks;
+            if (tickCount >= growthTickRand && (energy.getEnergyStored() >= ConfigHandler.dritConfig.rfToGrow)) {
+                growthTick();
+            }
+            tickCount++;
+        }
+    }
+
+    private void growthTick() {
+        Block blockUp = world.getBlockState(pos.up()).getBlock();
+        if (blockUp instanceof IGrowable) {
+            IBlockState blockPlant = world.getBlockState(pos.up(1));
+            IGrowable iGrowable = (IGrowable) blockPlant.getBlock();
+            if (iGrowable.canGrow(world, pos.up(1), blockPlant, false)) {
+                tickCount = 0;
+                energy.extractEnergy(ConfigHandler.dritConfig.rfToGrow, false);
+                world.playEvent(2005, pos.up(1), 0);
+                iGrowable.grow(world, world.rand, pos.up(), blockPlant);
+                world.markBlockRangeForRenderUpdate(pos, pos);
             }
         }
     }
