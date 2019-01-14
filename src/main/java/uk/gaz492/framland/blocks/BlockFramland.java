@@ -18,6 +18,7 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import uk.gaz492.framland.Framland;
+import uk.gaz492.framland.tileentities.TileFramland;
 import uk.gaz492.framland.util.ModInformation;
 
 import java.util.Random;
@@ -79,7 +80,7 @@ public class BlockFramland extends Block implements ITileEntityProvider {
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
-        return new FramlandTileEntity();
+        return new TileFramland();
     }
 
 }

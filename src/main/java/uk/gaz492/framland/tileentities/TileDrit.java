@@ -1,4 +1,4 @@
-package uk.gaz492.framland.blocks;
+package uk.gaz492.framland.tileentities;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
@@ -14,11 +14,11 @@ import uk.gaz492.framland.ConfigHandler;
 
 import javax.annotation.Nullable;
 
-public class FramlandTileEntity extends TileEntity implements ITickable {
+public class TileDrit extends TileEntity implements ITickable {
 
     private int tickCount = 0;
 
-    public EnergyStorage energy = new EnergyStorage(ConfigHandler.framlandConfig.maxRF, ConfigHandler.framlandConfig.maxRF, ConfigHandler.framlandConfig.maxRF);
+    public EnergyStorage energy = new EnergyStorage(ConfigHandler.dritConfig.maxRF, ConfigHandler.dritConfig.maxRF, ConfigHandler.dritConfig.maxRF);
 
     @Override
     public NBTTagCompound serializeNBT() {
@@ -49,14 +49,14 @@ public class FramlandTileEntity extends TileEntity implements ITickable {
         if (!world.isRemote) {
             Block blockUp = world.getBlockState(pos.up()).getBlock();
             if (blockUp instanceof IGrowable) {
-                int growthTick = world.rand.nextInt((ConfigHandler.framlandConfig.maxGrowthTicks - ConfigHandler.framlandConfig.minGrowthTicks) + 1) + ConfigHandler.framlandConfig.minGrowthTicks;
+                int growthTick = world.rand.nextInt((ConfigHandler.dritConfig.maxGrowthTicks - ConfigHandler.dritConfig.minGrowthTicks) + 1) + ConfigHandler.dritConfig.minGrowthTicks;
                 if (tickCount >= growthTick) {
-                    if (energy.getEnergyStored() >= ConfigHandler.framlandConfig.rfToGrow) {
+                    if (energy.getEnergyStored() >= ConfigHandler.dritConfig.rfToGrow) {
                         IBlockState blockPlant = world.getBlockState(pos.up(1));
                         IGrowable iGrowable = (IGrowable) blockPlant.getBlock();
                         if (iGrowable.canGrow(world, pos.up(1), blockPlant, false)) {
                             tickCount = 0;
-                            energy.extractEnergy(ConfigHandler.framlandConfig.rfToGrow, false);
+                            energy.extractEnergy(ConfigHandler.dritConfig.rfToGrow, false);
                             world.playEvent(2005, pos.up(1), 0);
                             iGrowable.grow(world, world.rand, pos.up(), blockPlant);
                             world.markBlockRangeForRenderUpdate(pos, pos);

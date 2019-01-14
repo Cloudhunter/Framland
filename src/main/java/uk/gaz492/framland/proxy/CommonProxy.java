@@ -13,8 +13,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import uk.gaz492.framland.ModBlocks;
 import uk.gaz492.framland.blocks.BlockDrit;
 import uk.gaz492.framland.blocks.BlockFramland;
-import uk.gaz492.framland.blocks.DritTileEntity;
-import uk.gaz492.framland.blocks.FramlandTileEntity;
+import uk.gaz492.framland.tileentities.TileDrit;
+import uk.gaz492.framland.tileentities.TileFramland;
 import uk.gaz492.framland.item.ItemThunderHoe;
 import uk.gaz492.framland.util.ModInformation;
 
@@ -38,8 +38,8 @@ public class CommonProxy {
         event.getRegistry().register(new BlockFramland());
         event.getRegistry().register(new BlockDrit());
 
-        GameRegistry.registerTileEntity(FramlandTileEntity.class, ModInformation.MOD_ID + "_framland");
-        GameRegistry.registerTileEntity(DritTileEntity.class, ModInformation.MOD_ID + "_drit");
+        GameRegistry.registerTileEntity(TileFramland.class, ModInformation.MOD_ID + "_framland");
+        GameRegistry.registerTileEntity(TileDrit.class, ModInformation.MOD_ID + "_drit");
     }
 
     @SubscribeEvent
