@@ -30,7 +30,8 @@ public class TileFramland extends TileEntity implements ITickable {
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
-        energy = new EnergyStorage(nbt.getInteger("energy"));
+        energy = new EnergyStorage(ConfigHandler.framlandConfig.maxRF, ConfigHandler.framlandConfig.maxRF, ConfigHandler.framlandConfig.maxRF, nbt.getInteger("energy"));
+//        energy = new EnergyStorage(nbt.getInteger("energy"));
     }
 
     @Override
