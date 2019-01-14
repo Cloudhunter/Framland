@@ -38,7 +38,7 @@ public class CommonProxy {
         event.getRegistry().register(new BlockFramland());
         event.getRegistry().register(new BlockDrit());
 
-        GameRegistry.registerTileEntity(TileFramland.class, new ResourceLocation(ModInformation.MOD_ID + "framland"));
+        GameRegistry.registerTileEntity(TileFramland.class, new ResourceLocation(ModInformation.MOD_ID + ":framland"));
         GameRegistry.registerTileEntity(TileDrit.class, new ResourceLocation(ModInformation.MOD_ID + ":drit"));
     }
 
