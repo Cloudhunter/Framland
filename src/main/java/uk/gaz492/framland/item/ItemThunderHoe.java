@@ -57,6 +57,11 @@ public class ItemThunderHoe extends Item {
                     world.spawnEntity(new EntityLightningBolt(world, pos.getX(), pos.getY(), pos.getZ(), false));
                 }
 
+                if (block == Blocks.GRASS || block == Blocks.GRASS_PATH) {
+                    world.setBlockState(pos, Blocks.FARMLAND.getDefaultState(), 3);
+                    return EnumActionResult.SUCCESS;
+                }
+
                 if (block == Blocks.DIRT) {
                     switch (iblockstate.getValue(BlockDirt.VARIANT)) {
                         case DIRT:
