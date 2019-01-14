@@ -21,17 +21,18 @@ public class TileFramland extends TileEntity implements ITickable {
     public EnergyStorage energy = new EnergyStorage(ConfigHandler.framlandConfig.maxRF, ConfigHandler.framlandConfig.maxRF, ConfigHandler.framlandConfig.maxRF);
 
     @Override
-    public NBTTagCompound serializeNBT() {
-        NBTTagCompound nbt = super.serializeNBT();
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
         nbt.setInteger("energy", energy.getEnergyStored());
+        System.out.println("Write NBT: "  + nbt);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void readFromNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
+        System.out.println("Read NBT" + nbt);
         energy = new EnergyStorage(ConfigHandler.framlandConfig.maxRF, ConfigHandler.framlandConfig.maxRF, ConfigHandler.framlandConfig.maxRF, nbt.getInteger("energy"));
-//        energy = new EnergyStorage(nbt.getInteger("energy"));
     }
 
     @Override
