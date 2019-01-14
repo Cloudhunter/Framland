@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -21,16 +22,36 @@ public class TileDrit extends TileEntity implements ITickable {
     public EnergyStorage energy = new EnergyStorage(ConfigHandler.dritConfig.maxRF, ConfigHandler.dritConfig.maxRF, ConfigHandler.dritConfig.maxRF);
 
     @Override
-    public NBTTagCompound serializeNBT() {
-        NBTTagCompound nbt = super.serializeNBT();
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
         nbt.setInteger("energy", energy.getEnergyStored());
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
-        super.deserializeNBT(nbt);
-        energy = new EnergyStorage(nbt.getInteger("energy"));
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+        nbt.getInteger("energy");
+        energy = new EnergyStorage(ConfigHandler.dritConfig.maxRF, ConfigHandler.dritConfig.maxRF, ConfigHandler.dritConfig.maxRF, nbt.getInteger("energy"));
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound compound = super.writeToNBT(new NBTTagCompound());
+        writeToNBT(compound);
+        return compound;
+    }
+
+    @Override
+    public void onDataPacket(net.minecraft.network.NetworkManager net, SPacketUpdateTileEntity pkt) {
+        super.onDataPacket(net, pkt);
+        readFromNBT(pkt.getNbtCompound());
     }
 
     @Override

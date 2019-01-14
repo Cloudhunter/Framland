@@ -3,6 +3,7 @@ package uk.gaz492.framland.proxy;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -18,7 +19,7 @@ import uk.gaz492.framland.tileentities.TileFramland;
 import uk.gaz492.framland.item.ItemThunderHoe;
 import uk.gaz492.framland.util.ModInformation;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber()
 public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent event) {
@@ -32,14 +33,13 @@ public class CommonProxy {
 
     }
 
-    @SuppressWarnings("deprecation")
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().register(new BlockFramland());
         event.getRegistry().register(new BlockDrit());
 
-        GameRegistry.registerTileEntity(TileFramland.class, ModInformation.MOD_ID + "_framland");
-        GameRegistry.registerTileEntity(TileDrit.class, ModInformation.MOD_ID + "_drit");
+        GameRegistry.registerTileEntity(TileFramland.class, new ResourceLocation(ModInformation.MOD_ID + "framland"));
+        GameRegistry.registerTileEntity(TileDrit.class, new ResourceLocation(ModInformation.MOD_ID + ":drit"));
     }
 
     @SubscribeEvent
