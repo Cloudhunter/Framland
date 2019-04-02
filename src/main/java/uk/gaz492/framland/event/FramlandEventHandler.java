@@ -31,7 +31,8 @@ public class FramlandEventHandler {
     @SubscribeEvent
     public static void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END && !BOLTS.isEmpty()) {
-            for (EntityLightningBolt bolt : BOLTS) {
+//            for (EntityLightningBolt bolt : BOLTS) {
+            for (EntityLightningBolt bolt : BOLTS.toArray(new EntityLightningBolt[0])){
                 BlockPos pos = new BlockPos(bolt);
 
                 for (int z = -2; z <= 2; z++) {
